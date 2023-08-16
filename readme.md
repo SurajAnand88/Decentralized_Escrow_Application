@@ -24,3 +24,11 @@ Compile the contracts using `npx hardhat compile`. The artifacts will be placed 
 
 To run the front-end application run `npm start` from the `/app` directory. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+
+## Back-End
+
+`cd` into the `/server` directory and run `npm install`
+
+To run the server using  `nodemon` or  `node index` from the `/server`  
+Server will start running into the PORT 4000
+
