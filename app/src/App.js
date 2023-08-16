@@ -1,7 +1,8 @@
-import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
-import deploy from './deploy';
-import Escrow from './Escrow';
+import axios from "axios";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import Escrow from "./Escrow";
+import deploy from "./deploy";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -15,23 +16,36 @@ function App() {
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
 
+  async function getContracts() {
+    const { data } = await axios.get("http://localhost:4000/contracts");
+    setEscrows([...data.contracts]);
+  }
+
+  async function postContract(contract) {
+    const { data } = await axios.post(
+      "http://localhost:4000/contracts",
+      contract
+    );
+    setEscrows([...data.contracts]);
+  }
+
   useEffect(() => {
     async function getAccounts() {
-      const accounts = await provider.send('eth_requestAccounts', []);
+      const accounts = await provider.send("eth_requestAccounts", []);
 
       setAccount(accounts[0]);
       setSigner(provider.getSigner());
     }
 
     getAccounts();
+    getContracts();
   }, [account]);
 
   async function newContract() {
-    const beneficiary = document.getElementById('beneficiary').value;
-    const arbiter = document.getElementById('arbiter').value;
-    const value = ethers.BigNumber.from(document.getElementById('wei').value);
+    const beneficiary = document.getElementById("beneficiary").value;
+    const arbiter = document.getElementById("arbiter").value;
+    const value = ethers.utils.parseEther(document.getElementById("wei").value);
     const escrowContract = await deploy(signer, arbiter, beneficiary, value);
-
 
     const escrow = {
       address: escrowContract.address,
@@ -39,9 +53,9 @@ function App() {
       beneficiary,
       value: value.toString(),
       handleApprove: async () => {
-        escrowContract.on('Approved', () => {
+        escrowContract.on("Approved", () => {
           document.getElementById(escrowContract.address).className =
-            'complete';
+            "complete";
           document.getElementById(escrowContract.address).innerText =
             "✓ It's been approved!";
         });
@@ -49,12 +63,12 @@ function App() {
         await approve(escrowContract, signer);
       },
     };
-
-    setEscrows([...escrows, escrow]);
+    postContract(escrow);
+    // setEscrows([...escrows, escrow]);
   }
 
   return (
-    <>
+    <div className="outer-div">
       <div className="contract">
         <h1> New Contract </h1>
         <label>
@@ -68,7 +82,7 @@ function App() {
         </label>
 
         <label>
-          Deposit Amount (in Wei)
+          Deposit Amount (in Ethereum)
           <input type="text" id="wei" />
         </label>
 
@@ -94,7 +108,7 @@ function App() {
           })}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -1,3 +1,4 @@
+import { utils } from "ethers";
 export default function Escrow({
   address,
   arbiter,
@@ -5,20 +6,28 @@ export default function Escrow({
   value,
   handleApprove,
 }) {
+  console.log(handleApprove);
   return (
-    <div className="existing-contract">
+    <div
+      className="existing-contract"
+      style={{ color: "black", fontSize: "14px" }}
+    >
       <ul className="fields">
+        <li>
+          <div> Contract </div>
+          <div> {address} </div>
+        </li>
         <li>
           <div> Arbiter </div>
           <div> {arbiter} </div>
         </li>
         <li>
-          <div> Beneficiary </div>
+          <div>Beneficiary </div>
           <div> {beneficiary} </div>
         </li>
         <li>
           <div> Value </div>
-          <div> {value} </div>
+          <div> {utils.formatEther(value.toString())} </div>
         </li>
         <div
           className="button"
