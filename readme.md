@@ -1,6 +1,7 @@
 # Decentralized Escrow Application
 
 This is an Escrow Dapp built with [Hardhat](https://hardhat.org/).
+The Ethereum smart contract defines an escrow system. It involves an arbiter, beneficiary, and depositor. The arbiter settles disputes, the beneficiary receives funds, and the depositor initiates the contract with Ether. Approval by the arbiter triggers Ether transfer to the beneficiary. This transparent, automated system ensures secure and trustworthy transactions, benefiting various applications.
 
 ## Project Layout
 
